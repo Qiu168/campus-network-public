@@ -13,7 +13,6 @@ func main() {
 	fmt.Println(len(username))
 	fmt.Println(password)
 	fmt.Println(len(password))
-	fmt.Scanf("h")
 	cookie := make(map[string]string)
 	client := &http.Client{
 		CheckRedirect: func(req *http.Request, via []*http.Request) error {
@@ -77,7 +76,6 @@ func main() {
 	do, _ := client.Do(newRequest)
 	defer do.Body.Close()
 	all, _ := io.ReadAll(do.Body)
-
 	fmt.Print(string(all))
 	defer resp.Body.Close()
 }
