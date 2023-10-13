@@ -8,6 +8,12 @@ import (
 )
 
 func main() {
+	username, password := getConfig()
+	fmt.Println(username)
+	fmt.Println(len(username))
+	fmt.Println(password)
+	fmt.Println(len(password))
+	fmt.Scanf("h")
 	cookie := make(map[string]string)
 	client := &http.Client{
 		CheckRedirect: func(req *http.Request, via []*http.Request) error {
@@ -33,7 +39,6 @@ func main() {
 	request.Header.Add("Upgrade-Insecure-Requests", "1")
 	//fmt.Println(request.Header)
 	fmt.Println("中文")
-
 	//处理返回结果
 	resp, _ := client.Do(request)
 	location := resp.Header.Get("Location")
@@ -47,8 +52,8 @@ func main() {
 	h := "http://10.0.3.2:801/eportal/portal/login?" +
 		"callback=dr1003&" +
 		"login_method=1&" +
-		"user_account=%2C0%2C3122004526&" +
-		"user_password=Wsxbzdxb168&" +
+		"user_account=%2C0%2C" + username + "&" +
+		"user_password=" + password + "&" +
 		"wlan_user_ip=" + cookie["wlanuserip"] + "&" +
 		"wlan_user_ipv6=" +
 		"&wlan_user_mac=000000000000&" +
