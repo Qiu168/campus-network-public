@@ -8,6 +8,7 @@ import (
 )
 
 func main() {
+	ConnectGDUT()
 	username, password := getConfig()
 	fmt.Println(username)
 	fmt.Println(len(username))
