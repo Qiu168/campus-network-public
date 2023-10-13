@@ -9,6 +9,7 @@ import (
 
 func main() {
 	ConnectGDUT()
+	//fmt.Scanf("h")
 	username, password := getConfig()
 	fmt.Println(username)
 	fmt.Println(len(username))
@@ -79,4 +80,7 @@ func main() {
 	all, _ := io.ReadAll(do.Body)
 	fmt.Print(string(all))
 	defer resp.Body.Close()
+	if isNetworkConnected() {
+		fmt.Println("network connected !!!! Ciallo～(∠・ω< )⌒☆")
+	}
 }

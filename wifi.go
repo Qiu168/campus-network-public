@@ -37,7 +37,7 @@ func ConnectGDUT() {
 	}
 
 	if profileName == "" {
-		println("未找到指定的 Wi-Fi 网络")
+		fmt.Println("未找到指定的 Wi-Fi 网络")
 		return
 	} else {
 		profileName = "gdut"
@@ -46,5 +46,11 @@ func ConnectGDUT() {
 
 	// 连接到指定的 Wi-Fi 网络
 	connectToNetwork := exec.Command("netsh", "wlan", "connect", "name="+profileName)
-	connectToNetwork.Run()
+	if err := connectToNetwork.Run(); err != nil {
+		fmt.Println("Error running connection:", err)
+		return
+	}
+
+	// 连接成功后，执行其他操作
+	fmt.Println("已成功连接到 Wi-Fi 网络")
 }
