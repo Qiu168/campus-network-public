@@ -5,10 +5,25 @@ import (
 	"io"
 	"net/http"
 	"regexp"
+	"time"
 )
 
 func main() {
 	ConnectGDUT()
+	startTime := time.Now()
+	timeout := 2 * time.Second
+	for {
+		ssid, _ := getCurrentWiFiSSID()
+		if ssid == "gdut" {
+			break
+		}
+		duration := time.Since(startTime) / time.Millisecond
+		fmt.Printf("running in %dms\n", duration)
+		if duration > timeout {
+			fmt.Println("程序超时")
+			panic("连接gdut失败")
+		}
+	}
 	//fmt.Scanf("h")
 	username, password := getConfig()
 	fmt.Println(username)
@@ -82,5 +97,7 @@ func main() {
 	defer resp.Body.Close()
 	if isNetworkConnected() {
 		fmt.Println("network connected !!!! Ciallo～(∠・ω< )⌒☆")
+	} else {
+		fmt.Println("network error qwq")
 	}
 }

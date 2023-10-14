@@ -37,7 +37,7 @@ func ConnectGDUT() {
 	}
 
 	if profileName == "" {
-		fmt.Println("未找到指定的 Wi-Fi 网络")
+		println("未找到指定的 Wi-Fi 网络")
 		return
 	} else {
 		profileName = "gdut"
@@ -46,11 +46,28 @@ func ConnectGDUT() {
 
 	// 连接到指定的 Wi-Fi 网络
 	connectToNetwork := exec.Command("netsh", "wlan", "connect", "name="+profileName)
-	if err := connectToNetwork.Run(); err != nil {
-		fmt.Println("Error running connection:", err)
-		return
+	connectToNetwork.Run()
+}
+func getCurrentWiFiSSID() (string, error) {
+	// 使用Windows的netsh命令获取当前连接的WiFi的SSID
+	cmd := exec.Command("netsh", "wlan", "show", "interfaces")
+	output, err := cmd.Output()
+	if err != nil {
+		return "", err
 	}
 
-	// 连接成功后，执行其他操作
-	fmt.Println("已成功连接到 Wi-Fi 网络")
+	// 将输出数据转换为字符串
+	outputStr := string(output)
+
+	// 在输出中查找SSID信息
+	lines := strings.Split(outputStr, "\n")
+	for _, line := range lines {
+		if strings.Contains(line, "SSID") {
+			ssid := strings.TrimSpace(strings.Split(line, ":")[1])
+			return ssid, nil
+		}
+	}
+
+	// 如果没有找到SSID信息
+	return "", fmt.Errorf("无法获取当前WiFi的SSID")
 }
