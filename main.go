@@ -54,12 +54,12 @@ func main() {
 	request.Header.Add("Cache-Control", "no-cache")
 	request.Header.Add("Upgrade-Insecure-Requests", "1")
 	//fmt.Println(request.Header)
-	fmt.Println("中文")
+	//fmt.Println("中文")
 	//处理返回结果
 	resp, _ := client.Do(request)
 	location := resp.Header.Get("Location")
 	// 正则表达式来匹配IP地址
-	fmt.Print(location + "\n")
+	fmt.Println(location)
 	ipRegex := `wlanuserip=([\d.]+)&wlanacname=&wlanacip=([\d.]+)`
 	re := regexp.MustCompile(ipRegex)
 	matches := re.FindStringSubmatch(location)
@@ -93,9 +93,9 @@ func main() {
 	do, _ := client.Do(newRequest)
 	defer do.Body.Close()
 	all, _ := io.ReadAll(do.Body)
-	fmt.Print(string(all))
+	fmt.Println(string(all))
 	defer resp.Body.Close()
-	if isNetworkConnected() {
+	if isWiFiLoggedIn() {
 		fmt.Println("network connected !!!! Ciallo～(∠・ω< )⌒☆")
 	} else {
 		fmt.Println("network error qwq")
