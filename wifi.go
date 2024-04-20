@@ -7,22 +7,23 @@ import (
 	"golang.org/x/text/transform"
 	"os/exec"
 	"strings"
+	"syscall"
 )
 
 func ConnectGDUT() {
 	// 打开 Wi-Fi
-	enableWiFi := exec.Command("netsh", "interface", "set", "interface", "name=\"Wi-Fi\"", "admin=enable")
-	enableWiFi.Run()
+	//enableWiFi := exec.Command("netsh", "interface", "set", "interface", "name=\"Wi-Fi\"", "admin=enable")
+	//enableWiFi.SysProcAttr = &syscall.SysProcAttr{HideWindow: true}
+	//enableWiFi.Run()
 
 	// 列出可用的 Wi-Fi 网络
 	listNetworks := exec.Command("netsh", "wlan", "show", "network")
+	listNetworks.SysProcAttr = &syscall.SysProcAttr{HideWindow: true}
 	output, _ := listNetworks.Output()
-	//fmt.Println(output)
-	//fmt.Println(networks)
 	gbkOutput, _, _ := transform.Bytes(simplifiedchinese.GBK.NewDecoder(), output)
 
 	networks := string(gbkOutput)
-	fmt.Println(networks)
+	//fmt.Println(networks)
 	// 查找要连接的 Wi-Fi 网络名称
 	desiredNetwork := "gdut" // 将 "YourSSID" 替换为你要连接的 Wi-Fi 网络名称
 
@@ -37,20 +38,24 @@ func ConnectGDUT() {
 	}
 
 	if profileName == "" {
+		CHANNEL <- "未找到指定的 Wi-Fi 网络"
 		println("未找到指定的 Wi-Fi 网络")
 		return
 	} else {
 		profileName = "gdut"
-		fmt.Println(profileName)
+		fmt.Println("find " + profileName + " successfully")
+		CHANNEL <- "find " + profileName + " successfully"
 	}
 
 	// 连接到指定的 Wi-Fi 网络
 	connectToNetwork := exec.Command("netsh", "wlan", "connect", "name="+profileName)
+	connectToNetwork.SysProcAttr = &syscall.SysProcAttr{HideWindow: true}
 	connectToNetwork.Run()
 }
 func getCurrentWiFiSSID() (string, error) {
 	// 使用Windows的netsh命令获取当前连接的WiFi的SSID
 	cmd := exec.Command("netsh", "wlan", "show", "interfaces")
+	cmd.SysProcAttr = &syscall.SysProcAttr{HideWindow: true}
 	output, err := cmd.Output()
 	if err != nil {
 		return "", err
@@ -67,7 +72,6 @@ func getCurrentWiFiSSID() (string, error) {
 			return ssid, nil
 		}
 	}
-
 	// 如果没有找到SSID信息
 	return "", fmt.Errorf("无法获取当前WiFi的SSID")
 }
