@@ -7,7 +7,14 @@ import (
 
 func createFileIfNotExistAndWrite(filePath, usernameText, passwordText string) error {
 	file, err := os.OpenFile(filePath, os.O_CREATE, 0777)
-	defer func() { file.Close() }()
+	if err != nil {
+		return err
+	}
+	err = file.Truncate(0)
+	if err != nil {
+		return err
+	}
+	defer func() { _ = file.Close() }()
 	if err == nil {
 		_, err = file.WriteString(usernameText + "\n" + passwordText)
 	}

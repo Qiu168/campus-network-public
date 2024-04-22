@@ -1,6 +1,11 @@
 package main
 
 import (
+	"image/color"
+	"os"
+	"strings"
+	"time"
+
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/canvas"
@@ -10,10 +15,6 @@ import (
 	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
 	"github.com/flopp/go-findfont"
-	"image/color"
-	"os"
-	"strings"
-	"time"
 )
 
 func init() {
